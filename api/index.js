@@ -27,11 +27,53 @@ if (fs.existsSync(filePath)) {
 }
 // Endpoint to get Excel data
 app.get("/", (req, res) => {
-  if (fs.existsSync(filePath)) {
-    res.json(data);
-  } else {
-    res.status(404).send("File not found");
-  }
+  const {
+    page = 0,
+    limit = 100,
+    created_dt,
+    data_source_modified_dt,
+    entity_type,
+    operating_status,
+    legal_name,
+    dba_name,
+    physical_address,
+    phone,
+    usdot_number,
+    mc_mx_ff_number,
+    power_units,
+    out_of_service_date,
+  } = req.query;
+  const filters = {
+    created_dt,
+    data_source_modified_dt,
+    entity_type,
+    operating_status,
+    legal_name,
+    dba_name,
+    physical_address,
+    phone,
+    usdot_number,
+    mc_mx_ff_number,
+    power_units,
+    out_of_service_date,
+  };
+  const filterItems = Object.keys(filters).filter(
+    (filter) => !!filters[filter]
+  );
+  console.log(filters, filterItems);
+  const filteredData = filterItems.length
+    ? data.filter((item) =>
+        filterItems.every((filter) =>
+          String(item[filter])
+            .toLowerCase()
+            .includes(String(filters[filter]).toLowerCase() || "")
+        )
+      )
+    : data;
+  res.json({
+    total: filteredData.length,
+    data: filteredData.slice(+page * +limit, (+page + 1) * +limit),
+  });
 });
 
 // Start the server
