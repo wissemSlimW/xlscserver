@@ -20,7 +20,7 @@ const readExcelFile = (filePath) => {
   const jsonData = xlsx.utils.sheet_to_json(worksheet);
   return jsonData;
 };
-const filePath = path.join(__dirname, "FMSCA_records.xlsx");
+const filePath = path.join(__dirname, "../FMSCA_records.xlsx");
 let data = [];
 if (fs.existsSync(filePath)) {
   data = readExcelFile(filePath);
