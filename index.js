@@ -26,7 +26,7 @@ if (fs.existsSync(filePath)) {
   data = readExcelFile(filePath);
 }
 // Endpoint to get Excel data
-app.get("/excel-data", (req, res) => {
+app.get("/", (req, res) => {
   if (fs.existsSync(filePath)) {
     res.json(data);
   } else {
